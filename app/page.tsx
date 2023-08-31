@@ -53,7 +53,7 @@ export default function Home() {
   return (
     <main className="flex flex-col justify-center items-center w-full h-screen text-center gap-4 p-8">
       <h1 className="text-5xl font-semibold">
-        Stoic<span className="text-red-600">Converter</span>
+        Stoic<span className="text-blue-400">Converter</span>
       </h1>
       <section className="sm:w-[50rem] gap-4 flex flex-col">
         <p className="text-xl">
@@ -64,7 +64,7 @@ export default function Home() {
           <Input
             ref={inputUrlRef}
             type="text"
-            placeholder="Enter the link of the desired audio"
+            placeholder="Enter the link of the desired video"
             value={inputValue}
             onChange={handleInputChange}
           />
