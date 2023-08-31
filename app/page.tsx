@@ -23,17 +23,10 @@ export default function Home() {
 
       const options = {
         method: 'GET',
-<<<<<<< HEAD
         url: 'https://ytstream-download-youtube-videos.p.rapidapi.com/dl',
         headers: {
           'X-RapidAPI-Key': 'c7365e916emsh6fa6de3d9a066a8p1eb215jsnfebe297f369c',
           'X-RapidAPI-Host': 'ytstream-download-youtube-videos.p.rapidapi.com'
-=======
-        url: 'https://youtube-mp36.p.rapidapi.com/dl',
-        headers: {
-          'X-RapidAPI-Key': 'c7365e916emsh6fa6de3d9a066a8p1eb215jsnfebe297f369c',
-          'X-RapidAPI-Host': 'youtube-mp36.p.rapidapi.com'
->>>>>>> 74f5d5573b4be9b1233f118e706b379463fe88be
         },
         params: {
           id: youtubeId
