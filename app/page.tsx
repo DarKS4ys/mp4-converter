@@ -57,7 +57,7 @@ export default function Home() {
       </h1>
       <section className="sm:w-[50rem] gap-4 flex flex-col">
         <p className="text-xl">
-          Transform YouTube videos into MP3 in just a few clicks
+          Transform YouTube videos into MP4 in just a few clicks
         </p>
 
         <form onSubmit={handleSubmit} className="gap-3 flex">
@@ -79,16 +79,12 @@ export default function Home() {
           </Button>
         </form>
 
-        {
-        
-        urlResult ?
-        
+        { urlResult ?
         <a target='_blank' rel="norefrrer" href={urlResult}>
           <Button className="bg-red-600 hover:bg-red-500 ring-red-500/50">
             Download MP4
           </Button>
-        </a> : null 
-        
+        </a> : null
         }
 
 
