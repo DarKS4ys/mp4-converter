@@ -8,7 +8,6 @@ import axios from "axios";
 import { YoutubeParser } from "./utils/YtParser";
 import Image from "next/image";
 import Download from "./components/Download";
-import {GoUnmute} from 'react-icons/go'
 
 interface AdaptiveFormat {
   url: string;
@@ -502,7 +501,7 @@ export default function Home() {
     }
   };
 
-  const placeholderImageUrl = "/placeholder";
+  const placeholderImageUrl = "/placeholder.jpg";
   return (
     <main className="flex flex-col justify-center items-center w-full h-screen text-center gap-4 p-8">
       <h1 className="text-5xl font-semibold">
