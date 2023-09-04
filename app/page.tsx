@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "./components/Button";
 import Input from "./components/Input";
 import clsx from "clsx";
@@ -8,6 +8,12 @@ import axios from "axios";
 import { YoutubeParser } from "./utils/YtParser";
 import Image from "next/image";
 import Download from "./components/Download";
+import {GoUnmute} from 'react-icons/go'
+
+interface AdaptiveFormat {
+  url: string;
+  audioQuality: string;
+}
 
 
 export default function Home() {
@@ -15,22 +21,29 @@ export default function Home() {
   const [inputValue, setInputValue] = useState<string>("");
   const [isLoading, setLoading] = useState<boolean>(false);
 
+  const [firstUrl, setFirstUrl] = useState<string | null>(null);
+  const [firstUrlQuality, setFirstUrlQuality] = useState<string | null>(null);
+  const [firstUrlDefinition, setFirstUrlDefinition] = useState<string | null>(null);
+  const [firstUrlAudio, setFirstUrlAudio] = useState(false)
 
-  const [firstUrl, setFirstUrl] = useState<string | null>(null)
-  const [firstUrlQuality, setFirstUrlQuality] = useState<string | null>(null)
-  const [firstUrlDefinition, setFirstUrlDefinition] = useState<string | null>(null)
+  const [secondUrl, setSecondUrl] = useState<string | null>(null);
+  const [secondUrlQuality, setSecondUrlQuality] = useState<string | null>(null);
+  const [secondUrlDefinition, setSecondUrlDefinition] = useState<string | null>(null);
+  const [secondUrlAudio, setSecondUrlAudio] = useState(false)
 
-  const [secondUrl, setSecondUrl] = useState<string | null>(null)
-  const [secondUrlQuality, setSecondUrlQuality] = useState<string | null>(null)
-  const [secondUrlDefinition, setSecondUrlDefinition] = useState<string | null>(null)
+  const [thirdUrl, setThirdUrl] = useState<string | null>(null);
+  const [thirdUrlQuality, setThirdUrlQuality] = useState<string | null>(null);
+  const [thirdUrlDefinition, setThirdUrlDefinition] = useState<string | null>(null);
+  const [thirdUrlAudio, setThirdUrlAudio] = useState(false)
 
-  const [thirdUrl, setThirdUrl] = useState<string | null>(null)
-  const [thirdUrlQuality, setThirdUrlQuality] = useState<string | null>(null)
-  const [thirdUrlDefinition, setThirdUrlDefinition] = useState<string | null>(null)
+  const [fourthUrl, setFourthUrl] = useState<string | null>(null);
+  const [fourthUrlQuality, setFourthUrlQuality] = useState<string | null>(null);
+  const [fourthUrlDefinition, setFourthUrlDefinition] = useState<string | null>(null);
+  const [fourthUrlAudio, setFourthUrlAudio] = useState(false)
 
-  const [fourthUrl, setFourthUrl] = useState<string | null>(null)
-  const [fourthUrlQuality, setFourthUrlQuality] = useState<string | null>(null)
-  const [fourthUrlDefinition, setFourthUrlDefinition] = useState<string | null>(null)
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [audioQuality, setAudioQuality] = useState<string | null>(null);
+  const [audioDefinition, setAudioDefinition] = useState<string | null>(null);
 
   const [urlResult, setUrlResult] = useState(null);
   const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null); // State for thumbnail URL
@@ -42,6 +55,9 @@ export default function Home() {
   };
 
   // What happens when the user presses on search button
+  useEffect(() => {
+    
+  }, [])
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (inputUrlRef.current !== null) {
@@ -54,7 +70,7 @@ export default function Home() {
         method: 'GET',
         url: 'https://ytstream-download-youtube-videos.p.rapidapi.com/dl',
         headers: {
-          'X-RapidAPI-Key': '6497078ea8mshfd1b258df6bd89fp16b9d4jsnd7e9317bcf12',
+          'X-RapidAPI-Key': 'c7365e916emsh6fa6de3d9a066a8p1eb215jsnfebe297f369c',
           'X-RapidAPI-Host': 'ytstream-download-youtube-videos.p.rapidapi.com'
         },
         params: {
@@ -66,32 +82,37 @@ export default function Home() {
       axios(options)
       .then(response => {
         const formatsArray = response.data.adaptiveFormats;
+        const otherFormatsArray = response.data.formats;
+
         console.log('the length of the array:' + formatsArray.length)
+        console.log("the length of the other array: " + otherFormatsArray.length)
+
         const videotitle = response.data.title;
-        const thumbnail = response.data.thumbnail[3].url;
+        const thumbnail = response.data.thumbnail[ 3 | 2 | 1 | 0].url;
 
         setVideoTitle(videotitle)
         setThumbnailUrl(thumbnail)
-        setUrlResult(formatsArray)
 
-        if (formatsArray.length >= 1) {
-            
-          const first_url = formatsArray[0].url
+        if (formatsArray.length >= 1 && formatsArray[0].height >= 1080 || formatsArray[0].height < 600 ) {
+          setFirstUrlAudio(false)
+          const first_url = response.data.adaptiveFormats[0].url
           let first_url_quality = formatsArray[0].height
           let first_url_definition = "SD"
+          setUrlResult(formatsArray)
 
-          
+          console.log(first_url_quality)
+
           if (first_url_quality === 2160) {
             first_url_quality = "4" + 'K';
             first_url_definition = "UHD"
           } else if (first_url_quality === 1440) {
             first_url_quality = "2" + 'K';
             first_url_definition = "UHD"
-          } else if (first_url_quality <= 1080) {
+          } else if (first_url_quality > 700) {
             first_url_quality = `${first_url_quality}P`;
             first_url_definition = "HD"
-          } else if (first_url_quality <= 480) {
-            first_url_quality = `${first_url_quality}P`;
+          } else if (first_url_quality < 500) {
+            first_url_quality = first_url_quality + 'P';
             first_url_definition = "SD"
           } else {
             first_url_quality = "Unknown"
@@ -102,7 +123,66 @@ export default function Home() {
           setFirstUrlQuality(first_url_quality);
           setFirstUrlDefinition(first_url_definition);
 
-        } 
+        } else if (formatsArray[0].height < 1080 )  {
+          setFirstUrlAudio(true)
+          if (response.data.formats[2].url !== null){
+            const first_url = response.data.formats[2].url
+            setFirstUrl(first_url);
+
+            const first_url_quality = response.data.formats[2].height
+            setFirstUrlQuality(first_url_quality + "P");
+
+            console.log("true 1")
+            console.log("firstUrlQuality:", first_url_quality);
+          } else if (response.data.formats[1].url !== null) {
+            const first_url = response.data.formats[1].url
+            setFirstUrl(first_url);
+
+            const first_url_quality = response.data.formats[1].height
+            setFirstUrlQuality(first_url_quality + "P");
+            console.log("true 2")
+          } else if (response.data.formats[0].url !== null) {
+            const first_url = response.data.formats[0].url
+            setFirstUrl(first_url);
+
+            const first_url_quality = response.data.formats[0].height
+            setFirstUrlQuality(first_url_quality + "P");
+
+            console.log("true 3")
+          } else {
+            const first_url = null;
+            setFirstUrl(first_url);
+
+            const first_url_quality = null
+            setFirstUrlQuality(first_url_quality + "P");
+
+            console.log("false")
+          }
+
+          let first_url_quality = otherFormatsArray[1|0].height
+          let first_url_definition = "SD"
+
+          if (first_url_quality === 2160) {
+            first_url_quality = "4" + 'K';
+            first_url_definition = "UHD"
+          } else if (first_url_quality === 1440) {
+            first_url_quality = "2" + 'K';
+            first_url_definition = "UHD"
+          } else if (first_url_quality <= 1080) {
+            first_url_quality = `${first_url_quality}P`;
+            first_url_definition = "HD"
+          } else if (first_url_quality < 720) {
+            first_url_quality = `${first_url_quality}P`;
+            first_url_definition = "SD"
+          } else {
+            first_url_quality = "Unknown"
+            first_url_definition = "?"
+          }
+
+          setUrlResult(otherFormatsArray)
+          setFirstUrlDefinition(first_url_definition);
+        }
+
         
         let secondFormatIndex = -1;
 
@@ -112,14 +192,73 @@ export default function Home() {
             break;
           }
         }
-
-        if (secondFormatIndex !== -1) {
-          const second_url = formatsArray[secondFormatIndex].url;
+        
+        if (secondFormatIndex !== -1 && formatsArray[0].height > 1080 || formatsArray[0].height < 600) {
+          setSecondUrlAudio(false)
           let second_url_quality = formatsArray[secondFormatIndex].height;
-          let second_url_definition = "SD";
-
-
+            const second_url = formatsArray[secondFormatIndex].url;
+            let second_url_definition = "SD";
+  
+            if (second_url_quality === 2160) {
+              second_url_quality = "4" + 'K';
+              second_url_definition = "UHD"
+            } else if (second_url_quality === 1440) {
+              second_url_quality = "2" + 'K';
+              second_url_definition = "UHD"
+            } else if (second_url_quality === 1080 || second_url_quality > 544) {
+              second_url_quality = `${second_url_quality}P`;
+              second_url_definition = "HD"
+            } else if (second_url_quality < 720) {
+              second_url_quality = `${second_url_quality}P`;
+              second_url_definition = "SD"
+            } else {
+              second_url_quality = "Unknown"
+              second_url_definition = "?"
+            }
+  
+            setSecondUrl(second_url);
+            setSecondUrlQuality(second_url_quality);
+            setSecondUrlDefinition(second_url_definition);
           
+        } else if (formatsArray[0].height === 1080) {
+          setSecondUrlAudio(true)
+          if (response.data.formats[2].url !== null){
+            const second_url = response.data.formats[2].url
+            setSecondUrl(second_url);
+  
+            const second_url_quality = response.data.formats[2].height
+            setSecondUrlQuality(second_url_quality + "P");
+  
+            console.log("true 1")
+            console.log("secondUrlQuality:", second_url_quality);
+          } else if (response.data.formats[1].url !== null) {
+            const second_url = response.data.formats[1].url
+            setSecondUrl(second_url);
+  
+            const second_url_quality = response.data.formats[1].height
+            setSecondUrlQuality(second_url_quality + "P");
+            console.log("true 2")
+          } else if (response.data.formats[0].url !== null) {
+            const second_url = response.data.formats[0].url
+            setSecondUrl(second_url);
+  
+            const second_url_quality = response.data.formats[0].height
+            setSecondUrlQuality(second_url_quality + "P");
+  
+            console.log("true 3")
+          } else {
+            const second_url = null;
+            setSecondUrl(second_url);
+  
+            const second_url_quality = null
+            setSecondUrlQuality(second_url_quality + "P");
+  
+            console.log("false")
+          }
+  
+          let second_url_quality = otherFormatsArray[1|0].height
+          let second_url_definition = "SD"
+  
           if (second_url_quality === 2160) {
             second_url_quality = "4" + 'K';
             second_url_definition = "UHD"
@@ -129,28 +268,241 @@ export default function Home() {
           } else if (second_url_quality <= 1080) {
             second_url_quality = `${second_url_quality}P`;
             second_url_definition = "HD"
-          } else if (second_url_quality <= 480) {
+          } else if (second_url_quality < 720) {
             second_url_quality = `${second_url_quality}P`;
             second_url_definition = "SD"
           } else {
             second_url_quality = "Unknown"
             second_url_definition = "?"
           }
-
-          setSecondUrl(second_url);
-          setSecondUrlQuality(second_url_quality);
+  
+          setUrlResult(otherFormatsArray)
           setSecondUrlDefinition(second_url_definition);
-        }})
+        }
+
+        // Find the third format with a different quality than the second one
+        let thirdFormatIndex = -1;
+
+        for (let i = secondFormatIndex + 1; i < formatsArray.length; i++) {
+          if (formatsArray[i].height !== formatsArray[secondFormatIndex].height) {
+            thirdFormatIndex = i;
+            break;
+          }
+        }
+
+        if (thirdFormatIndex !== -1 && formatsArray[0].height > 1500 || formatsArray[0].height < 1200) {
+          setThirdUrlAudio(false)
+          const third_url = formatsArray[thirdFormatIndex].url;
+          let third_url_quality = formatsArray[thirdFormatIndex].height;
+          let third_url_definition = "SD";
+
+          if (third_url_quality === 2160) {
+            third_url_quality = "4" + 'K';
+            third_url_definition = "UHD"
+          } else if (third_url_quality === 1440) {
+            third_url_quality = "2" + 'K';
+            third_url_definition = "UHD"
+          } else if (third_url_quality === 1080 || third_url_quality > 544) {
+            third_url_quality = `${third_url_quality}P`;
+            third_url_definition = "HD"
+          } else if (third_url_quality < 720) {
+            third_url_quality = `${third_url_quality}P`;
+            third_url_definition = "SD"
+          } else {
+            third_url_quality = "Unknown"
+            third_url_definition = "?"
+          }
+
+          setThirdUrl(third_url);
+          setThirdUrlQuality(third_url_quality);
+          setThirdUrlDefinition(third_url_definition);
+        } else {
+          setThirdUrlAudio(true)
+          if (response.data.formats[2].url !== null){
+            const third_url = response.data.formats[2].url
+            setThirdUrl(third_url);
+  
+            const third_url_quality = response.data.formats[2].height
+            setThirdUrlQuality(third_url_quality + "P");
+  
+            console.log("true 1")
+            console.log("thirdUrlQuality:", third_url_quality);
+          } else if (response.data.formats[1].url !== null) {
+            const third_url = response.data.formats[1].url
+            setThirdUrl(third_url);
+  
+            const third_url_quality = response.data.formats[1].height
+            setThirdUrlQuality(third_url_quality + "P");
+            console.log("true 2")
+          } else if (response.data.formats[0].url !== null) {
+            const third_url = response.data.formats[0].url
+            setThirdUrl(third_url);
+  
+            const third_url_quality = response.data.formats[0].height
+            setThirdUrlQuality(third_url_quality + "P");
+  
+            console.log("true 3")
+          } else {
+            const third_url = null;
+            setThirdUrl(third_url);
+  
+            const third_url_quality = null
+            setThirdUrlQuality(third_url_quality + "P");
+  
+            console.log("false")
+          }
+  
+          let third_url_quality = otherFormatsArray[1|0].height
+          let third_url_definition = "SD"
+  
+          if (third_url_quality === 2160) {
+            third_url_quality = "4" + 'K';
+            third_url_definition = "UHD"
+          } else if (third_url_quality === 1440) {
+            third_url_quality = "2" + 'K';
+            third_url_definition = "UHD"
+          } else if (third_url_quality <= 1080) {
+            third_url_quality = `${third_url_quality}P`;
+            third_url_definition = "HD"
+          } else if (third_url_quality < 720) {
+            third_url_quality = `${third_url_quality}P`;
+            third_url_definition = "SD"
+          } else {
+            third_url_quality = "Unknown"
+            third_url_definition = "?"
+          }
+  
+          setUrlResult(otherFormatsArray)
+          setThirdUrlDefinition(third_url_definition);
+        
+        }
+
+        
+      // Find the fourth format with a different quality than the third one
+      let fourthFormatIndex = -1;
+
+      for (let i = thirdFormatIndex + 1; i < formatsArray.length; i++) {
+        if (formatsArray[i].height !== formatsArray[thirdFormatIndex].height) {
+          fourthFormatIndex = i;
+          break;
+        }
+      }
+
+      if (fourthFormatIndex !== -1 && formatsArray[fourthFormatIndex].height >= 1080 ||  formatsArray[0].height <= 1080 || formatsArray[0].height === 1440 ) {
+        setFourthUrlAudio(false)
+        const fourth_url = formatsArray[fourthFormatIndex].url;
+        let fourth_url_quality = formatsArray[fourthFormatIndex].height;
+        let fourth_url_definition = "SD";
+
+        console.log(formatsArray[fourthFormatIndex].height)
+
+        if (fourth_url_quality === 2160) {
+          fourth_url_quality = "4" + 'K';
+          fourth_url_definition = "UHD"
+        } else if (fourth_url_quality === 1440) {
+          fourth_url_quality = "2" + 'K';
+          fourth_url_definition = "UHD"
+        } else if (fourth_url_quality === 1080 || fourth_url_quality > 544) {
+          fourth_url_quality = `${fourth_url_quality}P`;
+          fourth_url_definition = "HD"
+        } else if (fourth_url_quality < 720) {
+          fourth_url_quality = `${fourth_url_quality}P`;
+          fourth_url_definition = "SD"
+        } else {
+          fourth_url_quality = "Unknown"
+          fourth_url_definition = "?"
+        }
+
+        setFourthUrl(fourth_url);
+        setFourthUrlQuality(fourth_url_quality);
+        setFourthUrlDefinition(fourth_url_definition);
+      } else if (formatsArray[fourthFormatIndex].height < 1080 ) {
+        setFourthUrlAudio(true)
+        if (response.data.formats[2].url !== null){
+          const fourth_url = response.data.formats[2].url
+          setFourthUrl(fourth_url);
+
+          const fourth_url_quality = response.data.formats[2].height
+          setFourthUrlQuality(fourth_url_quality + "P");
+
+          console.log("true 1")
+          console.log("fourthUrlQuality:", fourth_url_quality);
+        } else if (response.data.formats[1].url !== null) {
+          const fourth_url = response.data.formats[1].url
+          setFourthUrl(fourth_url);
+
+          const fourth_url_quality = response.data.formats[1].height
+          setFourthUrlQuality(fourth_url_quality + "P");
+          console.log("true 2")
+        } else if (response.data.formats[0].url !== null) {
+          const fourth_url = response.data.formats[0].url
+          setFourthUrl(fourth_url);
+
+          const fourth_url_quality = response.data.formats[0].height
+          setFourthUrlQuality(fourth_url_quality + "P");
+
+          console.log("true 3")
+        } else {
+          const fourth_url = null;
+          setFourthUrl(fourth_url);
+
+          const fourth_url_quality = null
+          setFourthUrlQuality(fourth_url_quality + "P");
+
+          console.log("false")
+        }
+
+        let fourth_url_quality = otherFormatsArray[1|0].height
+        let fourth_url_definition = "SD"
+
+        if (fourth_url_quality === 2160) {
+          fourth_url_quality = "4" + 'K';
+          fourth_url_definition = "UHD"
+        } else if (fourth_url_quality === 1440) {
+          fourth_url_quality = "2" + 'K';
+          fourth_url_definition = "UHD"
+        } else if (fourth_url_quality <= 1080) {
+          fourth_url_quality = `${fourth_url_quality}P`;
+          fourth_url_definition = "HD"
+        } else if (fourth_url_quality < 720) {
+          fourth_url_quality = `${fourth_url_quality}P`;
+          fourth_url_definition = "SD"
+        } else {
+          fourth_url_quality = "Unknown"
+          fourth_url_definition = "?"
+        }
+
+        setUrlResult(otherFormatsArray)
+        setFourthUrlDefinition(fourth_url_definition);
+      }
+
+      const audioQualityToFind = "AUDIO_QUALITY_MEDIUM";
+
+      const audioFormat: AdaptiveFormat | undefined = formatsArray.find(
+        (format: AdaptiveFormat) => format.audioQuality === audioQualityToFind
+      );
+      
+
+      if (audioFormat) {
+        const audio_url = audioFormat.url;
+        const audio_quality = audioFormat.audioQuality;
+        const audio_definition = "Audio";
+
+        setAudioUrl(audio_url);
+        setAudioQuality(audio_quality);
+        setAudioDefinition(audio_definition);
+      }
+      
+      })
       .catch(err => console.log(err))
       .finally(() => {
-        setLoading(false); // Reset loading after the API call completes
+        setLoading(false);
       })
       inputUrlRef.current.value = "";
     }
   };
 
-
-  const placeholderImageUrl = "/placeholder"
+  const placeholderImageUrl = "/placeholder";
   return (
     <main className="flex flex-col justify-center items-center w-full h-screen text-center gap-4 p-8">
       <h1 className="text-5xl font-semibold">
@@ -180,7 +532,6 @@ export default function Home() {
           </Button>
         </form>
 
-            
         {isLoading ? (
           <p>Loading...</p>
         ) : urlResult ? (
@@ -197,22 +548,30 @@ export default function Home() {
                 <h1 className="md:text-2xl font-semibold text-lgflex items-center justify-center">{videoTitle}</h1>
               </div>
               
-              <div className="flex flex-col gap-4 w-72 p-4">
+              <div className="flex flex-col gap-4 w-72 p-2">
+                {firstUrl ? (
+                  <Download hasAudio={firstUrlAudio} downloadUrl={firstUrl} quality={firstUrlQuality} definition={firstUrlDefinition} />
+                ) : null}
 
-              {firstUrl ? (
-                <Download downloadUrl={firstUrl} quality={firstUrlQuality} definition={firstUrlDefinition} />
-              ) : null}
+                {secondUrl ? (
+                  <Download hasAudio={secondUrlAudio} downloadUrl={secondUrl} quality={secondUrlQuality} definition={secondUrlDefinition} />
+                ) : null}
 
-              {secondUrl ? (
-                <Download downloadUrl={secondUrl} quality={secondUrlQuality} definition={secondUrlDefinition} />
-              ) : null}
+                {thirdUrl ? (
+                  <Download hasAudio={thirdUrlAudio} downloadUrl={thirdUrl} quality={thirdUrlQuality} definition={thirdUrlDefinition} />
+                ) : null}
 
+                {fourthUrl ? (
+                  <Download hasAudio={fourthUrlAudio} downloadUrl={fourthUrl} quality={fourthUrlQuality} definition={fourthUrlDefinition} />
+                ) : null}
+
+                {audioUrl ? (
+                  <Download downloadUrl={audioUrl} quality="Audio" definition="MP3" />
+                ) : null}
               </div>
             </div>
           </>
         ) : null}
-
-
       </section>
     </main>
   );
