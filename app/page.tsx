@@ -9,9 +9,10 @@ import { YoutubeParser } from "./utils/YtParser";
 import Image from "next/image";
 import Download from "./components/Download";
 import {SiTiktok } from 'react-icons/si'
-import {FiExternalLink} from 'react-icons/fi'
+import {FiExternalLink, FiLoader} from 'react-icons/fi'
 import SocialLink from "./components/SocialLink";
 import Link from "next/link";
+import { BsTrash } from "react-icons/bs";
 
 interface AdaptiveFormat {
   url: string;
@@ -66,9 +67,11 @@ export default function Home() {
     if (inputUrlRef.current !== null) {
       const youtubeId = YoutubeParser(inputUrlRef.current.value)
       console.log(youtubeId);
-      setLoading(true);
 
       // Code to connect to rapid api
+      if (youtubeId) {
+        console.log(youtubeId);
+        setLoading(true);
       const options = {
         method: 'GET',
         url: 'https://ytstream-download-youtube-videos.p.rapidapi.com/dl',
@@ -80,6 +83,7 @@ export default function Home() {
           id: youtubeId
         }
       }
+      
 
       // What to do after connected to api
       axios(options)
@@ -131,30 +135,27 @@ export default function Home() {
           if (response.data.formats[2].url !== null){
             const first_url = response.data.formats[2].url
             setFirstUrl(first_url);
-
             const first_url_quality = response.data.formats[2].height
             setFirstUrlQuality(first_url_quality + "P");
 
-    
-            console.log("firstUrlQuality:", first_url_quality);
           } else if (response.data.formats[1].url !== null) {
             const first_url = response.data.formats[1].url
             setFirstUrl(first_url);
-
             const first_url_quality = response.data.formats[1].height
             setFirstUrlQuality(first_url_quality + "P");
+
           } else if (response.data.formats[0].url !== null) {
             const first_url = response.data.formats[0].url
             setFirstUrl(first_url);
-
             const first_url_quality = response.data.formats[0].height
             setFirstUrlQuality(first_url_quality + "P");
+
           } else {
             const first_url = null;
             setFirstUrl(first_url);
-
             const first_url_quality = null
             setFirstUrlQuality(first_url_quality + "P");
+
           }
 
           let first_url_quality = otherFormatsArray[1|0].height
@@ -223,29 +224,27 @@ export default function Home() {
           if (response.data.formats[2].url !== null){
             const second_url = response.data.formats[2].url
             setSecondUrl(second_url);
-  
             const second_url_quality = response.data.formats[2].height
             setSecondUrlQuality(second_url_quality + "P");
 
-            console.log("secondUrlQuality:", second_url_quality);
           } else if (response.data.formats[1].url !== null) {
             const second_url = response.data.formats[1].url
             setSecondUrl(second_url);
-  
             const second_url_quality = response.data.formats[1].height
             setSecondUrlQuality(second_url_quality + "P");
+
           } else if (response.data.formats[0].url !== null) {
             const second_url = response.data.formats[0].url
             setSecondUrl(second_url);
-  
             const second_url_quality = response.data.formats[0].height
             setSecondUrlQuality(second_url_quality + "P");
+
           } else {
             const second_url = null;
             setSecondUrl(second_url);
-  
             const second_url_quality = null
             setSecondUrlQuality(second_url_quality + "P");
+
           }
   
           let second_url_quality = otherFormatsArray[1|0].height
@@ -271,7 +270,6 @@ export default function Home() {
           setUrlResult(otherFormatsArray)
           setSecondUrlDefinition(second_url_definition);
         }
-
         // Find the third format with a different quality than the second one
         let thirdFormatIndex = -1;
 
@@ -310,31 +308,31 @@ export default function Home() {
           setThirdUrlDefinition(third_url_definition);
         } else {
           setThirdUrlAudio(true)
+
           if (response.data.formats[2].url !== null){
             const third_url = response.data.formats[2].url
             setThirdUrl(third_url);
-  
             const third_url_quality = response.data.formats[2].height
             setThirdUrlQuality(third_url_quality + "P");
-            console.log("thirdUrlQuality:", third_url_quality);
+
           } else if (response.data.formats[1].url !== null) {
             const third_url = response.data.formats[1].url
             setThirdUrl(third_url);
-  
             const third_url_quality = response.data.formats[1].height
             setThirdUrlQuality(third_url_quality + "P");
+
           } else if (response.data.formats[0].url !== null) {
             const third_url = response.data.formats[0].url
             setThirdUrl(third_url);
-  
             const third_url_quality = response.data.formats[0].height
             setThirdUrlQuality(third_url_quality + "P");
+
           } else {
             const third_url = null;
             setThirdUrl(third_url);
-  
             const third_url_quality = null
             setThirdUrlQuality(third_url_quality + "P");
+
           }
   
           let third_url_quality = otherFormatsArray[1|0].height
@@ -359,9 +357,7 @@ export default function Home() {
   
           setUrlResult(otherFormatsArray)
           setThirdUrlDefinition(third_url_definition);
-        
         }
-
         
       // Find the fourth format with a different quality than the third one
       let fourthFormatIndex = -1;
@@ -378,8 +374,6 @@ export default function Home() {
         const fourth_url = formatsArray[fourthFormatIndex].url;
         let fourth_url_quality = formatsArray[fourthFormatIndex].height;
         let fourth_url_definition = "SD";
-
-        console.log(formatsArray[fourthFormatIndex].height)
 
         if (fourth_url_quality === 2160) {
           fourth_url_quality = "4" + 'K';
@@ -406,20 +400,17 @@ export default function Home() {
         if (response.data.formats[2].url !== null){
           const fourth_url = response.data.formats[2].url
           setFourthUrl(fourth_url);
-
           const fourth_url_quality = response.data.formats[2].height
           setFourthUrlQuality(fourth_url_quality + "P");
-          console.log("fourthUrlQuality:", fourth_url_quality);
+
         } else if (response.data.formats[1].url !== null) {
           const fourth_url = response.data.formats[1].url
           setFourthUrl(fourth_url);
-
           const fourth_url_quality = response.data.formats[1].height
           setFourthUrlQuality(fourth_url_quality + "P");
         } else if (response.data.formats[0].url !== null) {
           const fourth_url = response.data.formats[0].url
           setFourthUrl(fourth_url);
-
           const fourth_url_quality = response.data.formats[0].height
           setFourthUrlQuality(fourth_url_quality + "P");
 
@@ -461,7 +452,6 @@ export default function Home() {
       const audioFormat: AdaptiveFormat | undefined = formatsArray.find(
         (format: AdaptiveFormat) => format.audioQuality === audioQualityToFind
       );
-      
 
       if (audioFormat) {
         const audio_url = audioFormat.url;
@@ -479,6 +469,9 @@ export default function Home() {
         setLoading(false);
       })
       inputUrlRef.current.value = "";
+      } else {
+        console.log("THIS IS NOT A VALID LINK")
+      }
     }
   };
 
@@ -513,30 +506,33 @@ export default function Home() {
         </form>
 
         {isLoading ? (
-          <p>Loading...</p>
+          <div className="flex justify-center items-center">
+            <FiLoader size={48} className="animate-spin"/>
+          </div>
         ) : urlResult ? (
           <>
             <div className="md:items-start md:justify-start md:flex-row flex flex-col gap-4 items-center justify-center">
-              <div className="group md:w-[32rem] flex flex-col gap-3 w-80">
-              <Link target="_blank" href={inputValue || "cantfindvideo"}>
-                  <div className="relative group">
-                    <Image
-                      alt="Video Thumbnail"
-                      src={thumbnailUrl || placeholderImageUrl}
-                      width={640}
-                      height={480}
-                      className="w-[32rem] h-[24rem] transition-opacity duration-300"
-                    />
+              <div className="md:w-[32rem] flex flex-col gap-3 w-80">
+              <div className="group w-[32rem] h-[18rem] overflow-hidden items-center justify-center flex">
+              <Link className="" target="_blank" href={inputValue || "cantfindvideo"}>
+                  <div className="relative group overflow-hidden h-[18rem] flex w-[32rem] items-center justify-center">
+                      <Image
+                        alt="Video Thumbnail"
+                        src={thumbnailUrl || placeholderImageUrl}
+                        width={640}
+                        height={480}
+                        className="w-full h-auto"
+                      />
                     <div className="absolute top-0 left-0 w-full h-full bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
                     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100">
                       <FiExternalLink className="h-10 w-10 group-hover:text-white transition group-hover:opacity-100 opacity-0" />
                     </div>
                   </div>
                 </Link>
+                </div>
                 <h1 className="md:text-2xl font-semibold text-lgflex items-center justify-center">{videoTitle}</h1>
               </div>
-              
-              <div className="flex flex-col gap-4 w-72 p-2 py-8">
+              <div className="flex flex-col gap-4 w-72 p-2">
                 {firstUrl ? (
                   <Download hasAudio={firstUrlAudio} downloadUrl={firstUrl} quality={firstUrlQuality} definition={firstUrlDefinition} />
                 ) : null}
@@ -554,15 +550,23 @@ export default function Home() {
                 ) : null}
 
                 {audioUrl ? (
-                  <Download downloadUrl={audioUrl} quality="Audio" definition="M4A" />
-                ) : null}
+                    <Download downloadUrl={audioUrl} quality="Audio" definition="M4A" />
+                  ) : null}
+
+                <Button 
+                className="group p-3 font-semibold text-stone-300 hover:text-white transition"
+                onClick={() => {
+                  setUrlResult(null)
+                  setInputValue("")
+                }}>
+                  <p className="group-hover:opacity-0 transition">Remove</p>
+                  <BsTrash className="group-hover:-translate-x-7 transition group-hover:scale-125"/>
+                </Button>
               </div>
             </div>
           </>
         ) : null}
-
           <hr className="border-[--border]"/>
-        
         <div className="flex justify-center items-center gap-4">
           <SocialLink link="/tiktok" icon={SiTiktok}/>
           <SocialLink link="/rumble">
