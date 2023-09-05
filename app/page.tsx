@@ -8,6 +8,10 @@ import axios from "axios";
 import { YoutubeParser } from "./utils/YtParser";
 import Image from "next/image";
 import Download from "./components/Download";
+import {SiTiktok } from 'react-icons/si'
+import {FiExternalLink} from 'react-icons/fi'
+import SocialLink from "./components/SocialLink";
+import Link from "next/link";
 
 interface AdaptiveFormat {
   url: string;
@@ -53,10 +57,10 @@ export default function Home() {
     setInputValue(event.target.value);
   };
 
+  const RumbleIcon = 'RumbleIcon.svg'
+  const YTMusicIcon = 'YtMusicIcon.svg'
+
   // What happens when the user presses on search button
-  useEffect(() => {
-    
-  }, [])
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (inputUrlRef.current !== null) {
@@ -69,7 +73,7 @@ export default function Home() {
         method: 'GET',
         url: 'https://ytstream-download-youtube-videos.p.rapidapi.com/dl',
         headers: {
-          'X-RapidAPI-Key': 'c7365e916emsh6fa6de3d9a066a8p1eb215jsnfebe297f369c',
+          'X-RapidAPI-Key': '1f949f44e4msh3ac01ff09360032p1c79a0jsn7be4c4e83316',
           'X-RapidAPI-Host': 'ytstream-download-youtube-videos.p.rapidapi.com'
         },
         params: {
@@ -131,7 +135,7 @@ export default function Home() {
             const first_url_quality = response.data.formats[2].height
             setFirstUrlQuality(first_url_quality + "P");
 
-            console.log("true 1")
+    
             console.log("firstUrlQuality:", first_url_quality);
           } else if (response.data.formats[1].url !== null) {
             const first_url = response.data.formats[1].url
@@ -139,23 +143,18 @@ export default function Home() {
 
             const first_url_quality = response.data.formats[1].height
             setFirstUrlQuality(first_url_quality + "P");
-            console.log("true 2")
           } else if (response.data.formats[0].url !== null) {
             const first_url = response.data.formats[0].url
             setFirstUrl(first_url);
 
             const first_url_quality = response.data.formats[0].height
             setFirstUrlQuality(first_url_quality + "P");
-
-            console.log("true 3")
           } else {
             const first_url = null;
             setFirstUrl(first_url);
 
             const first_url_quality = null
             setFirstUrlQuality(first_url_quality + "P");
-
-            console.log("false")
           }
 
           let first_url_quality = otherFormatsArray[1|0].height
@@ -227,8 +226,7 @@ export default function Home() {
   
             const second_url_quality = response.data.formats[2].height
             setSecondUrlQuality(second_url_quality + "P");
-  
-            console.log("true 1")
+
             console.log("secondUrlQuality:", second_url_quality);
           } else if (response.data.formats[1].url !== null) {
             const second_url = response.data.formats[1].url
@@ -236,23 +234,18 @@ export default function Home() {
   
             const second_url_quality = response.data.formats[1].height
             setSecondUrlQuality(second_url_quality + "P");
-            console.log("true 2")
           } else if (response.data.formats[0].url !== null) {
             const second_url = response.data.formats[0].url
             setSecondUrl(second_url);
   
             const second_url_quality = response.data.formats[0].height
             setSecondUrlQuality(second_url_quality + "P");
-  
-            console.log("true 3")
           } else {
             const second_url = null;
             setSecondUrl(second_url);
   
             const second_url_quality = null
             setSecondUrlQuality(second_url_quality + "P");
-  
-            console.log("false")
           }
   
           let second_url_quality = otherFormatsArray[1|0].height
@@ -323,8 +316,6 @@ export default function Home() {
   
             const third_url_quality = response.data.formats[2].height
             setThirdUrlQuality(third_url_quality + "P");
-  
-            console.log("true 1")
             console.log("thirdUrlQuality:", third_url_quality);
           } else if (response.data.formats[1].url !== null) {
             const third_url = response.data.formats[1].url
@@ -332,23 +323,18 @@ export default function Home() {
   
             const third_url_quality = response.data.formats[1].height
             setThirdUrlQuality(third_url_quality + "P");
-            console.log("true 2")
           } else if (response.data.formats[0].url !== null) {
             const third_url = response.data.formats[0].url
             setThirdUrl(third_url);
   
             const third_url_quality = response.data.formats[0].height
             setThirdUrlQuality(third_url_quality + "P");
-  
-            console.log("true 3")
           } else {
             const third_url = null;
             setThirdUrl(third_url);
   
             const third_url_quality = null
             setThirdUrlQuality(third_url_quality + "P");
-  
-            console.log("false")
           }
   
           let third_url_quality = otherFormatsArray[1|0].height
@@ -423,8 +409,6 @@ export default function Home() {
 
           const fourth_url_quality = response.data.formats[2].height
           setFourthUrlQuality(fourth_url_quality + "P");
-
-          console.log("true 1")
           console.log("fourthUrlQuality:", fourth_url_quality);
         } else if (response.data.formats[1].url !== null) {
           const fourth_url = response.data.formats[1].url
@@ -432,7 +416,6 @@ export default function Home() {
 
           const fourth_url_quality = response.data.formats[1].height
           setFourthUrlQuality(fourth_url_quality + "P");
-          console.log("true 2")
         } else if (response.data.formats[0].url !== null) {
           const fourth_url = response.data.formats[0].url
           setFourthUrl(fourth_url);
@@ -440,7 +423,6 @@ export default function Home() {
           const fourth_url_quality = response.data.formats[0].height
           setFourthUrlQuality(fourth_url_quality + "P");
 
-          console.log("true 3")
         } else {
           const fourth_url = null;
           setFourthUrl(fourth_url);
@@ -448,7 +430,6 @@ export default function Home() {
           const fourth_url_quality = null
           setFourthUrlQuality(fourth_url_quality + "P");
 
-          console.log("false")
         }
 
         let fourth_url_quality = otherFormatsArray[1|0].height
@@ -503,9 +484,9 @@ export default function Home() {
 
   const placeholderImageUrl = "/placeholder.jpg";
   return (
-    <main className="flex flex-col justify-center items-center w-full h-screen text-center gap-4 p-8">
-      <h1 className="text-5xl font-semibold">
-        Stoic<span className="text-blue-400">Converter</span>
+    <main className="flex flex-col justify-center items-center w-full sm:h-screen h-full text-center gap-4 p-8">
+      <h1 className="text-5xl font-semibold text-red-600">
+        Youtube <span className="text-white">Converter</span>
       </h1>
       <section className="sm:w-[50rem] gap-4 flex flex-col">
         <p className="text-xl">
@@ -522,7 +503,7 @@ export default function Home() {
           />
           <Button
             className={clsx("!w-36", {
-              "text-gray-500 hover:ring-0 hover:bg-transparent hover:border-[--border] hover:ring-offset-0": inputValue === "",
+              "cursor-not-allowed hover:bg-transparent text-[--border] hover:ring-offset-0 hover:ring-0": inputValue === "",
             })}
             type="submit"
             disabled={inputValue === ""}
@@ -536,18 +517,26 @@ export default function Home() {
         ) : urlResult ? (
           <>
             <div className="md:items-start md:justify-start md:flex-row flex flex-col gap-4 items-center justify-center">
-              <div className="md:w-[32rem] flex flex-col gap-3 w-80">
-                <Image
-                  alt="Video Thumbnail"
-                  src={thumbnailUrl || placeholderImageUrl} // Use placeholder if thumbnail is not available
-                  width={640}
-                  height={480}
-                  className="w-[32rem] h-[24rem]"
-                />
+              <div className="group md:w-[32rem] flex flex-col gap-3 w-80">
+              <Link target="_blank" href={inputValue || "cantfindvideo"}>
+                  <div className="relative group">
+                    <Image
+                      alt="Video Thumbnail"
+                      src={thumbnailUrl || placeholderImageUrl}
+                      width={640}
+                      height={480}
+                      className="w-[32rem] h-[24rem] transition-opacity duration-300"
+                    />
+                    <div className="absolute top-0 left-0 w-full h-full bg-black opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100">
+                      <FiExternalLink className="h-10 w-10 group-hover:text-white transition group-hover:opacity-100 opacity-0" />
+                    </div>
+                  </div>
+                </Link>
                 <h1 className="md:text-2xl font-semibold text-lgflex items-center justify-center">{videoTitle}</h1>
               </div>
               
-              <div className="flex flex-col gap-4 w-72 p-2">
+              <div className="flex flex-col gap-4 w-72 p-2 py-8">
                 {firstUrl ? (
                   <Download hasAudio={firstUrlAudio} downloadUrl={firstUrl} quality={firstUrlQuality} definition={firstUrlDefinition} />
                 ) : null}
@@ -565,12 +554,24 @@ export default function Home() {
                 ) : null}
 
                 {audioUrl ? (
-                  <Download downloadUrl={audioUrl} quality="Audio" definition="MP3" />
+                  <Download downloadUrl={audioUrl} quality="Audio" definition="M4A" />
                 ) : null}
               </div>
             </div>
           </>
         ) : null}
+
+          <hr className="border-[--border]"/>
+        
+        <div className="flex justify-center items-center gap-4">
+          <SocialLink link="/tiktok" icon={SiTiktok}/>
+          <SocialLink link="/rumble">
+            <Image  width={36} height={36} src={RumbleIcon} alt="Rumble Icon"/>
+          </SocialLink>
+          <SocialLink link="/ytmp3">
+          <Image width={48} height={48} src={YTMusicIcon} alt="Youtube Music Icon"/>
+          </SocialLink>
+        </div>
       </section>
     </main>
   );
