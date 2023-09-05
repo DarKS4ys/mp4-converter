@@ -542,7 +542,13 @@ export default function Home() {
                   </div>
                 </Link>
                 </div>
-                <h1 className="md:text-2xl font-semibold text-lgflex items-center justify-center">{videoTitle}</h1>
+                { videoTitle ?
+                <h1 className="md:text-2xl font-semibold text-lgflex items-center justify-center">
+                {videoTitle.length > 50
+                   ? `${videoTitle.slice(0, 50)}...`
+                  : videoTitle}
+                  </h1>
+                : null}
                 <div className="flex gap-2 justify-center items-center">
                 { videoViews ?
                 <div className="flex items-center justify-center gap-1">
