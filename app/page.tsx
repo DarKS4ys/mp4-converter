@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Button from "./components/Button";
 import Input from "./components/Input";
 import clsx from "clsx";
@@ -8,6 +8,7 @@ import axios from "axios";
 import { YoutubeParser } from "./utils/YtParser";
 import Image from "next/image";
 import Download from "./components/Download";
+import {AiFillEye} from 'react-icons/ai'
 import {SiTiktok } from 'react-icons/si'
 import {FiExternalLink, FiLoader} from 'react-icons/fi'
 import SocialLink from "./components/SocialLink";
@@ -52,6 +53,7 @@ export default function Home() {
   const [urlResult, setUrlResult] = useState(null);
   const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null); // State for thumbnail URL
   const [videoTitle, setVideoTitle] = useState<string | null>(null); // State
+  const [videoViews, setVideoViews] = useState<number | null>(null);
 
   // updates the input value everytime the input changes
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,6 +62,16 @@ export default function Home() {
 
   const RumbleIcon = 'RumbleIcon.svg'
   const YTMusicIcon = 'YtMusicIcon.svg'
+
+  function formatInteractionCount(count: number) {
+    if (count < 1000) {
+      return count.toString();
+    } else if (count < 1000000) {
+      return (count / 1000).toFixed(1) + 'K';
+    } else {
+      return (count / 1000000).toFixed(1) + 'M';
+    }
+  }
 
   // What happens when the user presses on search button
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -76,7 +88,7 @@ export default function Home() {
         method: 'GET',
         url: 'https://ytstream-download-youtube-videos.p.rapidapi.com/dl',
         headers: {
-          'X-RapidAPI-Key': '1f949f44e4msh3ac01ff09360032p1c79a0jsn7be4c4e83316',
+          'X-RapidAPI-Key': process.env.NEXT_PUBLIC_RAPID_API_KEY,
           'X-RapidAPI-Host': 'ytstream-download-youtube-videos.p.rapidapi.com'
         },
         params: {
@@ -96,7 +108,9 @@ export default function Home() {
 
         const videotitle = response.data.title;
         const thumbnail = response.data.thumbnail[ 3 | 2 | 1 | 0].url;
+        const viewsCount = response.data.viewCount
 
+        setVideoViews(viewsCount)
         setVideoTitle(videotitle)
         setThumbnailUrl(thumbnail)
 
@@ -106,8 +120,6 @@ export default function Home() {
           let first_url_quality = formatsArray[0].height
           let first_url_definition = "SD"
           setUrlResult(formatsArray)
-
-          console.log(first_url_quality)
 
           if (first_url_quality === 2160) {
             first_url_quality = "4" + 'K';
@@ -531,6 +543,14 @@ export default function Home() {
                 </Link>
                 </div>
                 <h1 className="md:text-2xl font-semibold text-lgflex items-center justify-center">{videoTitle}</h1>
+                <div className="flex gap-2 justify-center items-center">
+                { videoViews ?
+                <div className="flex items-center justify-center gap-1">
+                  <p>{formatInteractionCount(videoViews)}</p>
+                  <AiFillEye/>
+                </div>
+                : null}
+                </div>
               </div>
               <div className="flex flex-col gap-4 w-72 p-2">
                 {firstUrl ? (
@@ -568,7 +588,7 @@ export default function Home() {
         ) : null}
           <hr className="border-[--border]"/>
         <div className="flex justify-center items-center gap-4">
-          <SocialLink link="/tiktok" icon={SiTiktok}/>
+          <SocialLink iconSize={36} link="/tiktok" icon={SiTiktok}/>
           <SocialLink link="/rumble">
             <Image  width={36} height={36} src={RumbleIcon} alt="Rumble Icon"/>
           </SocialLink>

@@ -5,8 +5,8 @@ import {GoUnmute, GoMute} from 'react-icons/go'
 
 
 interface DownloadProps {
-    definition: string | null
-    quality:  string | null
+    definition?: string | null
+    quality?:  string | null
     downloadUrl: string
     onclick?: () => void
     hasAudio?: boolean
