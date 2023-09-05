@@ -13,7 +13,7 @@ import {SiTiktok } from 'react-icons/si'
 import {FiExternalLink, FiLoader} from 'react-icons/fi'
 import SocialLink from "./components/SocialLink";
 import Link from "next/link";
-import { BsTrash } from "react-icons/bs";
+import { BsMusicNote, BsTrash } from "react-icons/bs";
 
 interface AdaptiveFormat {
   url: string;
@@ -592,8 +592,7 @@ export default function Home() {
           <SocialLink link="/rumble">
             <Image  width={36} height={36} src={RumbleIcon} alt="Rumble Icon"/>
           </SocialLink>
-          <SocialLink link="/ytmp3">
-          <Image width={36} height={36} src={YTMusicIcon} alt="Youtube Music Icon"/>
+          <SocialLink link="/ytmp3" icon={BsMusicNote}>
           </SocialLink>
         </div>
       </section>
