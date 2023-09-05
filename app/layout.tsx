@@ -5,8 +5,8 @@ import { Inter } from 'next/font/google'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'MP4 Converter',
-  description: 'Stoic api testing',
+  title: 'Youtube Converter',
+  description: 'Convert youtube videos into MP4 or MP3 & download them',
 }
 
 export default function RootLayout({
