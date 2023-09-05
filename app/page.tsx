@@ -592,7 +592,7 @@ export default function Home() {
           <SocialLink link="/rumble">
             <Image  width={36} height={36} src={RumbleIcon} alt="Rumble Icon"/>
           </SocialLink>
-          <SocialLink link="/ytmp3" icon={BsMusicNote}>
+          <SocialLink link="/ytmp3" iconSize={36} icon={BsMusicNote}>
           </SocialLink>
         </div>
       </section>
