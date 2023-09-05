@@ -502,7 +502,7 @@ export default function Home() {
           <Input
             ref={inputUrlRef}
             type="text"
-            placeholder="Enter the link of the desired audio"
+            placeholder="Enter the link of the desired youtube video"
             value={inputValue}
             onChange={handleInputChange}
           />
