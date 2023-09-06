@@ -524,7 +524,7 @@ export default function Home() {
         ) : urlResult ? (
           <>
             <div className="md:items-start md:justify-start md:flex-row flex flex-col gap-4 items-center justify-center">
-              <div className="md:w-[32rem] flex flex-col gap-3 w-80">
+              <div className="md:w-[32rem] flex flex-col gap-3 w-80 pt-2">
               <div className="gtransition hover:ring-offset-4 hover:ring-4 ring-[--border] ring-offset-[--bg] border border-[--border] group w-[32rem] h-[18rem] overflow-hidden items-center justify-center flex rounded-lg transition">
               <Link className="" target="_blank" href={inputValue || "cantfindvideo"}>
                   <div className="relative group overflow-hidden h-[18rem] flex w-[32rem] items-center justify-center">
