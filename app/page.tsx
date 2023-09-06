@@ -508,12 +508,12 @@ export default function Home() {
           />
           <Button
             className={clsx("!w-36", {
-              "cursor-not-allowed hover:bg-transparent text-[--border] hover:ring-offset-0 hover:ring-0": inputValue === "",
+              "cursor-not-allowed hover:bg-transparent text-[--border] hover:ring-offset-0 hover:ring-0": inputValue === "" || isLoading,
             })}
             type="submit"
             disabled={inputValue === ""}
           >
-            {inputValue === "" ? "Empty" : "Search"}
+            {isLoading ? 'Loading...' : inputValue === "" ? "Empty" : "Search"}
           </Button>
         </form>
 
@@ -525,7 +525,7 @@ export default function Home() {
           <>
             <div className="md:items-start md:justify-start md:flex-row flex flex-col gap-4 items-center justify-center">
               <div className="md:w-[32rem] flex flex-col gap-3 w-80">
-              <div className="group w-[32rem] h-[18rem] overflow-hidden items-center justify-center flex">
+              <div className="gtransition hover:ring-offset-4 hover:ring-4 ring-[--border] ring-offset-[--bg] border border-[--border] group w-[32rem] h-[18rem] overflow-hidden items-center justify-center flex rounded-lg transition">
               <Link className="" target="_blank" href={inputValue || "cantfindvideo"}>
                   <div className="relative group overflow-hidden h-[18rem] flex w-[32rem] items-center justify-center">
                       <Image
